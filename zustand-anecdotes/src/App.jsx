@@ -8,6 +8,13 @@ const App = () => {
     actions.vote(id);
   };
 
+  const addAnecdote = (event) => {
+    event.preventDefault();
+    const content = event.target.anecdote.value;
+    actions.create(content);
+    e.target.reset();
+  };
+
   return (
     <div>
       <h2>Anecdotes</h2>
@@ -21,11 +28,11 @@ const App = () => {
         </div>
       ))}
       <h2>create new</h2>
-      <form>
+      <form onSubmit={addAnecdote}>
         <div>
-          <input />
+          <input name="anecdote" />
         </div>
-        <button>create</button>
+        <button type="submit">create</button>
       </form>
     </div>
   );
