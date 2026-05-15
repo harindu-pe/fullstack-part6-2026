@@ -1,17 +1,17 @@
-
-import { useAnecdotes } from './store'
+import { useAnecdoteActions, useAnecdotes } from "./store";
 
 const App = () => {
-  const anecdotes = useAnecdotes()
+  const anecdotes = useAnecdotes();
+  const actions = useAnecdoteActions();
 
-  const vote = id => {
-    console.log('vote', id)
-  }
+  const vote = (id) => {
+    actions.vote(id);
+  };
 
   return (
     <div>
       <h2>Anecdotes</h2>
-      {anecdotes.map(anecdote => (
+      {anecdotes.map((anecdote) => (
         <div key={anecdote.id}>
           <div>{anecdote.content}</div>
           <div>
@@ -28,7 +28,7 @@ const App = () => {
         <button>create</button>
       </form>
     </div>
-  )
-}
+  );
+};
 
-export default App
+export default App;
