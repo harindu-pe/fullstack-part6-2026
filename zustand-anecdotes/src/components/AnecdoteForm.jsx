@@ -8,7 +8,7 @@ const AnecdoteForm = () => {
     event.preventDefault();
     const content = event.target.anecdote.value;
     actions.create(content);
-    e.target.reset();
+    event.target.reset();
   };
 
   return (
