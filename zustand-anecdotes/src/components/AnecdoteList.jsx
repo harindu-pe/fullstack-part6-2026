@@ -1,10 +1,15 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { useAnecdotes, useAnecdoteActions, useFilter } from "../store";
+import anecdoteService from "../services/anecdotes";
 
 const AnecdoteList = () => {
   const anecdotes = useAnecdotes();
-  const actions = useAnecdoteActions();
+  const { vote, initialize } = useAnecdoteActions();
   const filter = useFilter();
+
+  useEffect(() => {
+    anecdoteService.getAll().then((anecdotes) => initialize(anecdotes));
+  }, [initialize]);
 
   const filteredAnecdotes = anecdotes.filter((anecdote) =>
     anecdote.content.toLowerCase().includes(filter.toLowerCase()),
@@ -21,7 +26,7 @@ const AnecdoteList = () => {
           <div>{anecdote.content}</div>
           <div>
             has {anecdote.votes}
-            <button onClick={() => actions.vote(anecdote.id)}>vote</button>
+            <button onClick={() => vote(anecdote.id)}>vote</button>
           </div>
         </div>
       ))}
