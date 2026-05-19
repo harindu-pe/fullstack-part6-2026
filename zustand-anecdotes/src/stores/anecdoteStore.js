@@ -1,5 +1,6 @@
 import { create } from "zustand";
-import anecdoteService from "./services/anecdotes";
+import anecdoteService from "../services/anecdotes";
+import useNotificationStore from "./notificationStore";
 
 const getId = () => (100000 * Math.random()).toFixed(0);
 
@@ -20,13 +21,15 @@ const useAnecdoteStore = create((set, get) => ({
         votes: anecdoteToUpdate.votes + 1,
       };
       const updated = await anecdoteService.updateAnecdote(id, updatedAnecdote);
-
       set((state) => {
         const anecdotes = state.anecdotes.map((a) =>
           a.id === id ? updated : a,
         );
         return { anecdotes };
       });
+      useNotificationStore
+        .getState()
+        .setNotification(`You voted for: ${updatedAnecdote.content}`, 5);
     },
     create: async (content) => {
       const anecdote = asObject(content);
@@ -35,6 +38,9 @@ const useAnecdoteStore = create((set, get) => ({
         const anecdotes = state.anecdotes.concat(newAnecdote);
         return { anecdotes };
       });
+      useNotificationStore
+        .getState()
+        .setNotification(`You created a new anecdote: ${content}`, 5);
     },
     initialize: async () => {
       const anecdotes = await anecdoteService.getAll();

@@ -1,5 +1,5 @@
 import React from "react";
-import { useAnecdoteActions } from "../store";
+import { useAnecdoteActions } from "../stores/anecdoteStore";
 
 const AnecdoteForm = () => {
   const actions = useAnecdoteActions();

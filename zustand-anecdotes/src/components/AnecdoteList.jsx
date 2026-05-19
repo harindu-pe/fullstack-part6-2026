@@ -1,5 +1,9 @@
 import React, { useEffect } from "react";
-import { useAnecdotes, useAnecdoteActions, useFilter } from "../store";
+import {
+  useAnecdotes,
+  useAnecdoteActions,
+  useFilter,
+} from "../stores/anecdoteStore";
 
 const AnecdoteList = () => {
   const { vote } = useAnecdoteActions();
