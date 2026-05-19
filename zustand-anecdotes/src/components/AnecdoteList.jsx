@@ -1,4 +1,3 @@
-import React, { useEffect } from "react";
 import {
   useAnecdotes,
   useAnecdoteActions,
@@ -6,7 +5,7 @@ import {
 } from "../stores/anecdoteStore";
 
 const AnecdoteList = () => {
-  const { vote } = useAnecdoteActions();
+  const { vote, delete: deleteAnecdote } = useAnecdoteActions();
   const anecdotes = useAnecdotes();
   const filter = useFilter();
 
@@ -28,6 +27,11 @@ const AnecdoteList = () => {
           <div>
             has {anecdote.votes}
             <button onClick={() => vote(anecdote.id)}>vote</button>
+            {anecdote.votes === 0 && (
+              <button onClick={() => deleteAnecdote(anecdote.id)}>
+                delete
+              </button>
+            )}
           </div>
         </div>
       ))}
