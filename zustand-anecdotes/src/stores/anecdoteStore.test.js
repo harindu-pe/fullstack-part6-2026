@@ -38,4 +38,26 @@ describe("useAnecdoteActions", () => {
     const { result: anecdotesResult } = renderHook(() => useAnecdotes());
     expect(anecdotesResult.current).toEqual(mockAnecdotes);
   });
+
+  it("anecdotes are sorted by votes in descending order", async () => {
+    const mockAnecdotes = [
+      { id: "1", content: "Anecdote 1", votes: 2 },
+      { id: "2", content: "Anecdote 2", votes: 5 },
+      { id: "3", content: "Anecdote 3", votes: 1 },
+    ];
+
+    anecdoteService.getAll.mockResolvedValue(mockAnecdotes);
+
+    const { result } = renderHook(() => useAnecdoteActions());
+    await act(async () => {
+      await result.current.initialize();
+    });
+
+    const { result: anecdotesResult } = renderHook(() => useAnecdotes());
+    expect(anecdotesResult.current).toEqual([
+      { id: "2", content: "Anecdote 2", votes: 5 },
+      { id: "1", content: "Anecdote 1", votes: 2 },
+      { id: "3", content: "Anecdote 3", votes: 1 },
+    ]);
+  });
 });
