@@ -14,7 +14,6 @@ import anecdoteService from "../services/anecdotes";
 import useAnecdoteStore, {
   useAnecdotes,
   useAnecdoteActions,
-  useFilter,
 } from "./anecdoteStore";
 
 beforeEach(() => {
@@ -58,6 +57,30 @@ describe("useAnecdoteActions", () => {
       { id: "2", content: "Anecdote 2", votes: 5 },
       { id: "1", content: "Anecdote 1", votes: 2 },
       { id: "3", content: "Anecdote 3", votes: 1 },
+    ]);
+  });
+
+  it("setFilter updates the filter state", async () => {
+    const mockAnecdotes = [
+      { id: "1", content: "Anecdote 1", votes: 2 },
+      { id: "2", content: "Anecdote 2", votes: 5 },
+      { id: "3", content: "Anecdote 3", votes: 1 },
+    ];
+
+    anecdoteService.getAll.mockResolvedValue(mockAnecdotes);
+
+    const { result } = renderHook(() => useAnecdoteActions());
+    await act(async () => {
+      await result.current.initialize();
+    });
+
+    await act(async () => {
+      await result.current.setFilter("Anecdote 1");
+    });
+
+    const { result: anecdotesResult } = renderHook(() => useAnecdotes());
+    expect(anecdotesResult.current).toEqual([
+      { id: "1", content: "Anecdote 1", votes: 2 },
     ]);
   });
 });
