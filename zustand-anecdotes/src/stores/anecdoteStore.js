@@ -62,7 +62,24 @@ const useAnecdoteStore = create((set, get) => ({
   },
 }));
 
-export const useAnecdotes = () => useAnecdoteStore((state) => state.anecdotes);
+export const useAnecdotes = () => {
+  const anecdotes = useAnecdoteStore((state) => state.anecdotes);
+  const filter = useAnecdoteStore((state) => state.filter);
+
+  // Filter anecdotes based on the current filter value
+  const filteredAnecdotes = anecdotes.filter((anecdote) => {
+    return anecdote.content.toLowerCase().includes(filter.toLowerCase());
+  });
+
+  // Sort anecdotes by votes in descending order
+  const sortedAnecdotes = [...filteredAnecdotes].sort(
+    (a, b) => b.votes - a.votes,
+  );
+
+  return sortedAnecdotes;
+};
 export const useAnecdoteActions = () =>
   useAnecdoteStore((state) => state.actions);
 export const useFilter = () => useAnecdoteStore((state) => state.filter);
+
+export default useAnecdoteStore;

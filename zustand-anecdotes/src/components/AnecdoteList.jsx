@@ -1,27 +1,12 @@
-import {
-  useAnecdotes,
-  useAnecdoteActions,
-  useFilter,
-} from "../stores/anecdoteStore";
+import { useAnecdoteActions, useAnecdotes } from "../stores/anecdoteStore";
 
 const AnecdoteList = () => {
-  const { vote, delete: deleteAnecdote } = useAnecdoteActions();
   const anecdotes = useAnecdotes();
-  const filter = useFilter();
-
-  // Filter anecdotes based on the current filter value
-  const filteredAnecdotes = anecdotes.filter((anecdote) => {
-    return anecdote.content.toLowerCase().includes(filter.toLowerCase());
-  });
-
-  // Sort anecdotes by votes in descending order
-  const sortedAnecdotes = [...filteredAnecdotes].sort(
-    (a, b) => b.votes - a.votes,
-  );
+  const { vote, delete: deleteAnecdote } = useAnecdoteActions();
 
   return (
     <>
-      {sortedAnecdotes.map((anecdote) => (
+      {anecdotes.map((anecdote) => (
         <div key={anecdote.id}>
           <div>{anecdote.content}</div>
           <div>
