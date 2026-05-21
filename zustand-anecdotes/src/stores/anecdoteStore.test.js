@@ -1,5 +1,5 @@
-import { describe, it, expect, beforeEach, vi } from "vitest";
-import { renderHook, act } from "@testing-library/react";
+import { act, renderHook } from "@testing-library/react";
+import { beforeEach, describe, expect, it, vi } from "vitest";
 
 vi.mock("../services/anecdotes", () => ({
   default: {
@@ -12,8 +12,8 @@ vi.mock("../services/anecdotes", () => ({
 
 import anecdoteService from "../services/anecdotes";
 import useAnecdoteStore, {
-  useAnecdotes,
   useAnecdoteActions,
+  useAnecdotes,
 } from "./anecdoteStore";
 
 beforeEach(() => {
@@ -75,12 +75,40 @@ describe("useAnecdoteActions", () => {
     });
 
     await act(async () => {
-      await result.current.setFilter("Anecdote 1");
+      result.current.setFilter("Anecdote 1");
     });
 
     const { result: anecdotesResult } = renderHook(() => useAnecdotes());
     expect(anecdotesResult.current).toEqual([
       { id: "1", content: "Anecdote 1", votes: 2 },
+    ]);
+  });
+
+  it("vote updates the anecdote", async () => {
+    const mockAnecdotes = [
+      { id: "1", content: "Anecdote 1", votes: 0 },
+      { id: "2", content: "Anecdote 2", votes: 0 },
+    ];
+
+    anecdoteService.getAll.mockResolvedValue(mockAnecdotes);
+
+    const { result } = renderHook(() => useAnecdoteActions());
+    await act(async () => {
+      await result.current.initialize();
+    });
+
+    anecdoteService.updateAnecdote.mockImplementation((id, data) =>
+      Promise.resolve(data),
+    );
+
+    await act(async () => {
+      await result.current.vote(mockAnecdotes[0].id);
+    });
+
+    const { result: anecdotesResult } = renderHook(() => useAnecdotes());
+    expect(anecdotesResult.current).toEqual([
+      { id: "1", content: "Anecdote 1", votes: 1 },
+      { id: "2", content: "Anecdote 2", votes: 0 },
     ]);
   });
 });
