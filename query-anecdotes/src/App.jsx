@@ -1,9 +1,12 @@
 import AnecdoteForm from "./components/AnecdoteForm";
 import Notification from "./components/Notification";
 import { useAnecdotes } from "./hooks/useAnecdotes";
+import useNotification from "./hooks/useNotification";
 
 const App = () => {
   const { anecdotes, isPending, isError, updateAnecdote } = useAnecdotes();
+
+  const { triggerNotification } = useNotification();
 
   if (isPending) {
     return <div>loading data...</div>;
@@ -15,6 +18,7 @@ const App = () => {
 
   const handleVote = (anecdote) => {
     updateAnecdote(anecdote);
+    triggerNotification(`you voted '${anecdote.content}'`, 5);
   };
 
   return (
